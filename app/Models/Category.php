@@ -46,13 +46,13 @@ class Category extends Model
 
     //定义一个访问器，获取所有祖先目录的ID值
     public function getPathIdsAttribute()
-    {
+    {   
     	return array_filter(explode('-', trim($this->path, '-')));
     }
 
     // 定义一个访问器，获取所有祖先类目并按层级排序
     public function getAncestorsAttribute()
-    {
+    {   
     	return Category::query()
     				->where('id', $this->path_ids)
     				->orderBy('level')

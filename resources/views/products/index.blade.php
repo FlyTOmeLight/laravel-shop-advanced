@@ -8,6 +8,19 @@
   <div class="panel-body">
     <div class="row">
       <form action="{{ route('products.index') }}" class="form-inline search-form">
+        {{-- 面包屑开始 --}}
+        <a href="{{ route('products.index') }}" class="all-products">全部</a> &gt;
+        @if ($category)
+          @foreach ($category->ancestors as $ancestor)
+            <span class="category">
+              <a href="{{ route('products.index', ['category_id' => $ancestor->id]) }}">{{ $ancestor->name }}</a>
+            </span>
+            <span>></span>
+          @endforeach
+          <span class="category">{{ $category->name }}</span> <span> ></span>
+          <input type="hidden" name="category_id" value="{{ $category->id }}">
+        @endif
+        {{-- 面包屑开始 --}}
         <input type="text" class="form-control input-sm" name="search" placeholder="搜索">
         <button class="btn btn-primary btn-sm">搜索</button>
         <select name="order" class="form-control input-sm pull-right">
@@ -20,6 +33,20 @@
           <option value="rating_asc">评价从低到高</option>
         </select>
       </form>
+    </div>
+     <div class="filters">
+      <!-- 如果当前是通过类目筛选，并且此类目是一个父类目 -->
+      @if ($category && $category->is_directory)
+        <div class="row">
+          <div class="col-xs-3 filter-key">子类目：</div>
+          <div class="col-xs-9 filter-values">
+          <!-- 遍历直接子类目 -->
+          @foreach($category->children as $child)
+            <a href="{{ route('products.index', ['category_id' => $child->id]) }}">{{ $child->name }}</a>
+          @endforeach
+          </div>
+        </div>
+      @endif
     </div>
     <div class="row products-list">
       @foreach($products as $product)
