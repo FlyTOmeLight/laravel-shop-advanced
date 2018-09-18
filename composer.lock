@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c2d54a98eddbb6767bb88e0f46ff6db9",
+    "content-hash": "0f89bf88d5420af926a8a557ef63811a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -588,16 +588,16 @@
         },
         {
             "name": "encore/laravel-admin",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/z-song/laravel-admin.git",
-                "reference": "f9d42460b31b07e1f2d2c05fffca15c3d09bf655"
+                "reference": "af4cd09a1d23ea91e140799bedc9c7f97985c24d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/f9d42460b31b07e1f2d2c05fffca15c3d09bf655",
-                "reference": "f9d42460b31b07e1f2d2c05fffca15c3d09bf655",
+                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/af4cd09a1d23ea91e140799bedc9c7f97985c24d",
+                "reference": "af4cd09a1d23ea91e140799bedc9c7f97985c24d",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -661,7 +661,7 @@
                 "grid",
                 "laravel"
             ],
-            "time": "2018-09-09T08:40:17+00:00"
+            "time": "2018-09-16T16:20:40+00:00"
         },
         {
             "name": "endroid/installer",
@@ -1192,6 +1192,64 @@
                 }
             ],
             "time": "2015-04-20T18:58:01+00:00"
+        },
+        {
+            "name": "jxlwqq/material-ui",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/material-ui.git",
+                "reference": "fd88e03b51928b26b5ca95bd1de6bf8247cf81be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/material-ui/zipball/fd88e03b51928b26b5ca95bd1de6bf8247cf81be",
+                "reference": "fd88e03b51928b26b5ca95bd1de6bf8247cf81be",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "encore/laravel-admin": ">=1.6.1",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jxlwqq\\MaterialUI\\MaterialUIServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jxlwqq\\MaterialUI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jxlwqq",
+                    "email": "jxlwqq@gmail.com"
+                }
+            ],
+            "description": "material ui for laravel-admin",
+            "homepage": "https://github.com/jxlwqq/material-ui",
+            "keywords": [
+                "extension",
+                "laravel-admin"
+            ],
+            "time": "2018-09-17T03:00:34+00:00"
         },
         {
             "name": "khanamiryan/qrcode-detector-decoder",

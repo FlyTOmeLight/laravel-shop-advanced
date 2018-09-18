@@ -149,6 +149,8 @@ return [
      * 扩展设置.
      */
     'extensions' => [
-
+        'material-ui' => [
+            'enable' => true,
+        ]
     ],
 ];
