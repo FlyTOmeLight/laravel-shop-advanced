@@ -64,7 +64,7 @@ class ProductsController extends Controller
     {
         return Admin::grid(Product::class, function (Grid $grid) {
             // 使用 with 来预加载商品类目数据，减少 SQL 查询
-            $grid->model()->with(['category']);
+            $grid->model()->where('type', Product::TYPE_NORMAL)->with(['category']);
 
             $grid->id('ID')->sortable();
             $grid->title('商品名称');
@@ -102,6 +102,7 @@ class ProductsController extends Controller
     {
         // 创建一个表单
         return Admin::form(Product::class, function (Form $form) {
+            $form->hidden('type')->value(Product::TYPE_NORMAL);
             // 创建一个输入框，第一个参数 title 是模型的字段名，第二个参数是该字段描述
             $form->text('title', '商品名称')->rules('required');
             // 创建一个选择图片的框
