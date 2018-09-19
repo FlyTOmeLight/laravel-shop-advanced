@@ -13,6 +13,14 @@
         </div>
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
             <ul class="nav navbar-nav">
+                @if (isset($categoryTree))
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">所有类目<b class="caret"></b></a>
+                        <ul class="dropdown-menu multi-level">
+                            @each ('layouts._category_item', $categoryTree, 'category')
+                        </ul>
+                    </li>
+                @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!-- 登录注册链接开始 -->
