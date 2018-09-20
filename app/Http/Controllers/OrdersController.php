@@ -9,6 +9,7 @@ use App\Http\Requests\CrowdFundingOrderRequest;
 use App\Models\UserAddress;
 use App\Models\Order;
 use App\Models\ProductSku;
+use App\Models\CrowdfundingProduct;
 use Illuminate\Http\Request;
 use App\Services\OrderService;
 use App\Events\OrderReviewd;
@@ -132,10 +133,14 @@ class OrdersController extends Controller
         if (!$order->paid_at) {
             throw new InvalidRequestException('该订单未支付，不可退款');
         }
+        if ($order->type ==- Order::TYPE_CROWDFUNDING) {
+            throw new InvalidRequestException('众筹订单不支持退款');
+        }
         // 判断订单退款状态是否正确
         if ($order->refund_status !== Order::REFUND_STATUS_PENDING) {
             throw new InvalidRequestException('该订单已经申请过退款，请勿重复申请');
         }
+        
         // 将用户输入的退款理由放到订单的 extra 字段中
         $extra                  = $order->extra ?: [];
         $extra['refund_reason'] = $request->input('reason');
