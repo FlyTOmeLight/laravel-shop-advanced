@@ -8,6 +8,7 @@ use App\Models\UserAddress;
 use App\Models\Order;
 use App\Models\ProductSku;
 use App\Models\CouponCode;
+use App\Models\CrowdfundingProduct;
 use App\Exceptions\InvalidRequestException;
 use App\Jobs\CloseOrder;
 use Carbon\Carbon;
@@ -81,6 +82,48 @@ class OrderService
         // 这里我们直接使用 dispatch 函数
         dispatch(new CloseOrder($order, config('app.order_ttl')));
 
+        return $order;
+    }
+
+    public function crowdfunding(User $user, UserAddress $address, ProductSku $sku, $amount)
+    {
+        // 开启一个数据库事务
+        $order = \DB::transaction(function () use ($user, $address, $sku, $amount) {
+            // 更新此地址的最后使用时间
+            $address->update(['last_used_at' => Carbon::now()]);
+            // 创建一个订单
+            $order   = new Order([
+                'address'      => [ // 将地址信息放入订单中
+                    'address'       => $address->full_address,
+                    'zip'           => $address->zip,
+                    'contact_name'  => $address->contact_name,
+                    'contact_phone' => $address->contact_phone,
+                ],
+                'remark'       => '',
+                'total_amount' => $sku->price * $amount,
+            ]);
+            // 订单关联到当前用户
+            $order->user()->associate($user);
+            // 写入数据库
+            $order->save();
+            // 创建一个新的订单项并与 SKU 关联
+            $item = $order->items()->make([
+                'amount' => $amount,
+                'price' => $sku->price,
+            ]);
+            $item->product()->associate($sku->product_id);
+            $item->productSku()->associate($sku);
+            $item->save();
+            if ($sku->decreaseStock($amount) <= 0) {
+                throw new InvalidRequestException('该商品库存不足');
+            }
+
+            return $order;
+        });
+
+        // 众筹结束时间减去当前时间得到剩余秒数
+        $crowdfundingTtl = $sku->product->crowdfunding->end_at->getTimestamp() - time();
+        dispatch(new CloseOrder($order, min(config('app.order_ttl'), $crowdfundingTtl)));
         return $order;
     }
 }
