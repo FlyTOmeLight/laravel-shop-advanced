@@ -12,7 +12,7 @@ class Installment extends Model
 
     public static $statusMap = [
         self::STATUS_PENDING => '未执行',
-        self::STATUS_PENDING => '还款中',
+        self::STATUS_REPAYING => '还款中',
         self::STATUS_FINISHED => '已完成',
     ];
 
