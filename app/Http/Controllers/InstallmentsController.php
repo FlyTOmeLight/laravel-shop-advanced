@@ -104,7 +104,7 @@ class InstallmentsController extends Controller
             // 将分期付款对应的商品订单状态改为已支付
             $installment->order->update([
                 'paid_at' => Carbon::now(),
-                'payment_method' => 'alipay',
+                'payment_method' => 'installment',
                 'payment_no' => $no,
             ]);
             //触发商品订单已支付事件

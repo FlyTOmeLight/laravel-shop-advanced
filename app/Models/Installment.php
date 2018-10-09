@@ -62,4 +62,25 @@ class Installment extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function refreshRefundStatus()
+    {
+        $allSuccess = true;
+        //重新加载InstallmentItems保持与数据库一致
+        $this->load('InstallmentItems');
+        // 再次遍历所有还款计划
+        foreach ($this->InstallmentItems  as $item) {
+            // 如果该还款计划已经还款，但退款状态不是成功
+            if ($item->paid_at && $item->refund_status !== InstallmentItem::REFUND_STATUS_SUCCESS) {
+                $allSuccess = false;
+                break;
+            }
+        }
+
+        if ($allSuccess) {
+            $this->order->update([
+                'refund_status' => InstallmentItem::REFUND_STATUS_SUCCESS,
+            ]);
+        }
+    }
 }

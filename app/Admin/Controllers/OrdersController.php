@@ -109,6 +109,7 @@ class OrdersController extends Controller
         if ($order->refund_status !== Order::REFUND_STATUS_APPLIED) {
             throw new InvalidRequestException('订单状态不正确');
         }
+
         // 是否同意退款
         if ($request->input('agree')) {
             // 调用退款逻辑
