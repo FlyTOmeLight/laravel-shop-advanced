@@ -82,6 +82,54 @@ class ProductsController extends Controller
             }
         }
 
+        //聚合搜索，仅仅在存在关键词搜索或者使用了类目筛选时才存在聚合搜索(分面搜索)
+        if ($search || isset($category)) {
+            $params['body']['aggs'] = [
+                'properties' => [
+                    'nested' => [
+                        'path' => 'properties',
+                    ],
+                    //二层聚合
+                    'aggs' => [
+                        'properties' => [
+                            'terms' => [
+                                'field' => 'properties.name',
+                            ],
+                            //三层聚合
+                            'aggs' => [
+                                'value' => [
+                                    'terms' => [
+                                        'field' => 'properties.value',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+        //避免按属性筛选后显示的属性条目重复
+        $propertyFilters = [];
+        //按属性值筛选
+        if ($filterString = $request->input('filters')) {
+            $filterArray = explode('|', $filterString);
+            foreach ($filterArray as $filter) {
+                list($name, $value) = explode(':', $filter);
+                $propertyFilters[$name] = $value;
+                //添加到filter中
+                $params['body']['query']['bool']['filter'][] = [
+                    //因为是筛选的nested下的属性值所以要使用nested
+                    'nested' => [
+                        'path' => 'properties',
+                        'query' => [
+                            ['term' => ['properties.name' => $name]],
+                            ['term' => ['properties.value' => $value]],
+                        ],
+                    ],
+                ];
+            }
+        }
+
         $result = app('es')->search($params);
         $productsId = collect($result['hits']['hits'])->pluck('_id')->all();
 
@@ -94,6 +142,22 @@ class ProductsController extends Controller
             'path' => route('products.index', false),// 手动构建分页的 url
         ]);
 
+        $properties = [];
+
+        //如果返回的字段里有aggregations字段说明做了分面搜索
+        if (isset($result['aggregations'])) {
+            //使用collect将返回值转为集合
+            $properties = collect($result['aggregations']['properties']['properties']['buckets'])
+                ->map(function ($bucket) {
+                    return [
+                        'key' => $bucket['key'],
+                        'values' => collect($bucket['value']['buckets'])->pluck('key')->all(),
+                    ];
+                })->filter(function ($property) use ($propertyFilters) {
+                    return  count($property['values']) > 1 && !isset($propertyFilters[$property['key']]);
+                });
+        }
+
         return view('products.index', [
             'products' => $pager,
             'filters' => [
@@ -101,6 +165,8 @@ class ProductsController extends Controller
                 'order' => $order,
             ],
             'category' => $category ?? null,
+            'properties' => $properties,
+            'propertyFilters' => $propertyFilters,
         ]);
 
 //        // 创建一个查询构造器
