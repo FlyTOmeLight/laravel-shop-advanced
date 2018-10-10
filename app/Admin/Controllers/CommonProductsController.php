@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SyncOneProductToES;
 use Encore\Admin\Controllers\HasResourceActions;
 use App\Models\Product;
 use Encore\Admin\Layout\Content;
@@ -90,6 +91,11 @@ abstract class CommonProductsController extends Controller
 
         $form->saving(function (Form $form) {
             $form->model()->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME, 0)->min('price');
+        });
+
+        $form->saved(function (Form $form) {
+            $product = $form->model();
+            $this->dispatch(new SyncOneProductToES($product));
         });
 
 
