@@ -80,7 +80,10 @@ class Product extends Model
             return array_only($sku->toArray(), ['title', 'description', 'price']);
         });
         $arr['properties'] = $this->properties->map(function (ProductProperty $property) {
-            return array_only($property->toArray(), ['name', 'value']);
+//            return array_only($property->toArray(), ['name', 'value']);
+            return array_merge(array_only($property->toArray(), ['name', 'value']), [
+                'search_value' => $property->name.':'.$property->value,
+            ]);
         });
 
         return $arr;

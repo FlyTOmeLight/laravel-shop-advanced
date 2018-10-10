@@ -167,7 +167,7 @@
         location.search = buildSearch(searches);
     }
 
-    var filters = {!! json_encode($filters) !!};
+    var filters={!! json_encode($filters) !!};
     $(document).ready(function () {
       $('.search-form input[name=search]').val(filters.search);
       $('.search-form select[name=order]').val(filters.order);
