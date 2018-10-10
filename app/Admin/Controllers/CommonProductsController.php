@@ -104,3 +104,4 @@ abstract class CommonProductsController extends Controller
 
 	abstract protected function customForm(Form $form);
 }
+

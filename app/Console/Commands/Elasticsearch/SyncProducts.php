@@ -62,3 +62,4 @@ class SyncProducts extends Command
         $this->info('同步完成');
     }
 }
+

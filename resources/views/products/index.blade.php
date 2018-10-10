@@ -8,19 +8,21 @@
   <div class="panel-body">
     <div class="row">
       <form action="{{ route('products.index') }}" class="form-inline search-form">
-        {{-- 面包屑开始 --}}
+         {{--面包屑开始--}}
         <a href="{{ route('products.index') }}" class="all-products">全部</a> &gt;
         @if ($category)
-          @foreach ($category->ancestors as $ancestor)
-            <span class="category">
-              <a href="{{ route('products.index', ['category_id' => $ancestor->id]) }}">{{ $ancestor->name }}</a>
-            </span>
-            <span>></span>
-          @endforeach
-          <span class="category">{{ $category->name }}</span> <span> ></span>
+          @if($category->path !== '-')
+            @foreach ($category->ancestors as $ancestor)
+              <span class="category">
+                <a href="{{ route('products.index', ['category_id' => $ancestor->id]) }}">{{ $ancestor->name }}</a>
+              </span>
+              <span>></span>
+            @endforeach
+          @endif
+          <span class="category">{{ $category->name }}</span>
           <input type="hidden" name="category_id" value="{{ $category->id }}">
         @endif
-        {{-- 面包屑开始 --}}
+         {{--面包屑结束--}}
         <input type="text" class="form-control input-sm" name="search" placeholder="搜索">
         <button class="btn btn-primary btn-sm">搜索</button>
         <select name="order" class="form-control input-sm pull-right">
