@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidRequestException;
 use App\SearchBuilders\ProductSearchBuilder;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\OrderItem;
 use App\Models\Category;
-use App\Services\CategoryService;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductsController extends Controller
@@ -142,10 +142,11 @@ class ProductsController extends Controller
         $result = app('es')->search($searchBuilder->getParams());
         $productsId = collect($result['hits']['hits'])->pluck('_id')->all();
 
-        $products = Product::query()
-            ->whereIn('id', $productsId)
-            ->orderByRaw(\DB::raw("FIND_IN_SET(id, '".join(',', $productsId)."'".')'))
-            ->get();
+//        $products = Product::query()
+//            ->whereIn('id', $productsId)
+//            ->orderByRaw(\DB::raw("FIND_IN_SET(id, '".join(',', $productsId)."'".')'))
+//            ->get();
+        $products = Product::query()->byIds($productsId)->get();
 
         $pager = new LengthAwarePaginator($products, $result['hits']['total'], $perPage, $page, [
             'path' => route('products.index', false),// 手动构建分页的 url
@@ -233,7 +234,7 @@ class ProductsController extends Controller
 //        ]);
     }
 
-    public function show(Product $product, Request $request)
+    public function show(Product $product, Request $request, ProductService $service)
     {
         if (!$product->on_sale) {
             throw new InvalidRequestException('商品未上架');
@@ -254,12 +255,40 @@ class ProductsController extends Controller
             ->orderBy('reviewed_at', 'desc') // 按评价时间倒序
             ->limit(10) // 取出 10 条
             ->get();
-        
+
+
+//        //创建一个查找器来来做推荐商品，显示搜索结果前四个
+//        $searchBuilder = (new ProductSearchBuilder())->onSale()->paginate(4, 1);
+//        //遍历当前商品的属性
+//        foreach ($product->properties as $property) {
+//            $searchBuilder->propertyFilter($property->name, $property->value, 'should');
+//        }
+//        //设置最少匹配一半的属性
+//        $searchBuilder->minShouldMatch(count($product->properties)/2);
+//        $params = $searchBuilder->getParams();
+//        //同时把当前商品的id移出
+//        $params['body']['query']['bool']['must_not'] = [
+//            ['term' => ['_id' => $product->id]],
+//        ];
+//        //搜索
+//        $result = app('es')->search($params);
+//        $similarProductIds = collect($result['hits']['hits'])->pluck('_id')->all();
+        $similarProductIds = $service->getSimilarProductIds($product, 4);
+        //根据es搜索出来商品id搜索相似商品
+
+//        $similarProducts = Product::query()
+//                ->whereIn('id', $similarProductIds)
+//                ->orderByRaw(\DB::raw("FIND_IN_SET(id ,'".join(',', $similarProductIds)."');"))
+//                ->get();
+//        dd($similarProductIds);
+        $similarProducts = Product::query()->byIds($similarProductIds)->get();
+
         // 最后别忘了注入到模板中
         return view('products.show', [
             'product' => $product,
             'favored' => $favored,
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'similar' => $similarProducts,
         ]);
     }
 

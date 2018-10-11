@@ -8,58 +8,7 @@
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
-// 通用样式
-body {
-    font-family: Hiragino Sans GB, "Hiragino Sans GB", Helvetica, "Microsoft YaHei", Arial,sans-serif;
-}
-
-/* 顶部导航 */
-
-.navbar-static-top {
-    border-color: #e7e7e7;
-    background-color: #fff;
-    box-shadow: 0px 1px 11px 2px rgba(42, 42, 42, 0.1);
-    border-top: 4px solid #00b5ad;
-    margin-bottom: 40px;
-    margin-top: 0px;
-}
-
-/* 底部样式 */
-html {
-    position: relative;
-    min-height: 100% ;
-}
-body {
-    margin-bottom: 60px;
-}
-
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100% ;
-    /* Set the fixed height of the footer here */
-    height: 60px;
-    background-color: #000;
-
-    .container {
-        padding-right: 15px;
-        padding-left: 15px;
-
-        p {
-            margin: 19px 0;
-            color: #c1c1c1;
-
-            a {
-                color: inherit;
-            }
-        }
-    }
-}
-
-.products-index-page, .products-favorites-page {
-  .pagination {
-    margin-right: 5px;
-  }
+@mixin product-list {
   .products-list {
     padding: 0 15px;
     .product-item {
@@ -117,6 +66,61 @@ body {
       }
     }
   }
+}
+
+// 通用样式
+body {
+    font-family: Hiragino Sans GB, "Hiragino Sans GB", Helvetica, "Microsoft YaHei", Arial,sans-serif;
+}
+
+/* 顶部导航 */
+
+.navbar-static-top {
+    border-color: #e7e7e7;
+    background-color: #fff;
+    box-shadow: 0px 1px 11px 2px rgba(42, 42, 42, 0.1);
+    border-top: 4px solid #00b5ad;
+    margin-bottom: 40px;
+    margin-top: 0px;
+}
+
+/* 底部样式 */
+html {
+    position: relative;
+    min-height: 100% ;
+}
+body {
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100% ;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    background-color: #000;
+
+    .container {
+        padding-right: 15px;
+        padding-left: 15px;
+
+        p {
+            margin: 19px 0;
+            color: #c1c1c1;
+
+            a {
+                color: inherit;
+            }
+        }
+    }
+}
+
+.products-index-page, .products-favorites-page {
+  .pagination {
+    margin-right: 5px;
+  }
+  @include product-list;
   .search-form {
     padding: 0 20px 10px;
     border-bottom: 1px solid #eee;
@@ -180,6 +184,15 @@ body {
 }
 
 .products-show-page {
+  .similar-products {
+    @include product-list;
+    .title {
+      font-weight: normal;
+    }
+    .price {
+      background-color: unset;
+    }
+  }
   .crowdfunding-info {
     margin-bottom: 20px;
     font-size: 14px;
@@ -686,3 +699,4 @@ body {
     padding-right: 10px;
   }
 }
+

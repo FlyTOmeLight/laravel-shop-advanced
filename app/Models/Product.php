@@ -87,4 +87,18 @@ class Product extends Model
         });
         return $arr;
     }
+
+
+    /**
+     * es查询后使商品排序
+     * @param $query
+     * @param $ids
+     * @return query
+     */
+    public function scopeByIds($query, $ids)
+    {
+        return $query->whereIn('id', $ids)
+                    ->orderByRaw(\DB::raw("FIND_IN_SET('id','".join(',', $ids)."')"));
+
+    }
 }
