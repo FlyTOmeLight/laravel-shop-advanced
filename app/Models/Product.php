@@ -85,7 +85,6 @@ class Product extends Model
                 'search_value' => $property->name.':'.$property->value,
             ]);
         });
-
         return $arr;
     }
 }
