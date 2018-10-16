@@ -116,7 +116,7 @@ class Migrate extends Command
         // 获取索引信息，返回结构的 key 为索引名称，value 为别名
         $indexInfo = $this->es->indices()->getAliases(['index' => $aliasName]);
         //取出第一个key即为索引名称
-        $indexName = array_keys($indexInfo[0]);
+        $indexName = array_keys($indexInfo)[0];
         // 用正则判断索引名称是否以 _数字 结尾
         if (!preg_match('/_(\d+)$/', $indexName, $m)) {
             $msg = '索引名称不正确:'.$indexName;
