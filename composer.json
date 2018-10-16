@@ -13,6 +13,7 @@
         "fideloper/proxy": "~3.3",
         "jxlwqq/material-ui": "^1.0",
         "laravel/framework": "5.5.*",
+        "laravel/horizon": "^1.4",
         "laravel/tinker": "~1.0",
         "moontoast/math": "^1.1",
         "overtrue/laravel-lang": "^3.0",
