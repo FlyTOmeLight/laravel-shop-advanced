@@ -118,7 +118,7 @@ class Migrate extends Command
         //取出第一个key即为索引名称
         $indexName = array_keys($indexInfo)[0];
         // 用正则判断索引名称是否以 _数字 结尾
-        if (!preg_match('/_(\d+)$/', $indexName, $m)) {
+        if (!preg_match('~_(\d+)$~', $indexName, $m)) {
             $msg = '索引名称不正确:'.$indexName;
             $this->error($msg);
             throw new \Exception($msg);
