@@ -20,6 +20,12 @@ class AppServiceProvider extends ServiceProvider
         \View()->composer(['products.index', 'products.show'], \App\Http\ViewComposers\CategoryTreeComposer::class);
         //设置carbon为中文
         Carbon::setlocale('zh');
+        //只在本地开发环境开启sql日志
+        if (app()->environment('local')) {
+            \DB::listen(function ($query) {
+                \Log::info(Str::replaceArray('?', $query->bindings, $query->sql));
+            });
+        }
     }
 
     /**
