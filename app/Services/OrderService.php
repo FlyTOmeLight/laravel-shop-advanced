@@ -186,18 +186,18 @@ class OrderService
     }
 
     //秒杀商品
-    public function seckill(User $user,UserAddress $address, ProductSku $sku)
+    public function seckill(User $user,array $addressData, ProductSku $sku)
     {
-        $order = \DB::transaction(function () use ($user, $address, $sku) {
+        $order = \DB::transaction(function () use ($user, $addressData, $sku) {
             //更新此地址的最后使用时间
             $address->update(['last_used_at' => Carbon::now()]);
             //创建一个订单
             $order = new Order([
                 'address' => [
-                    'address' => $address->full_address,
-                    'zip' => $address->zip,
-                    'contact_phone' => $address->contact_phone,
-                    'contact_name' => $address->contact_name,
+                    'address' => $addressData['province'].$addressData['city'].$addressData['district'].$addressData['address'],
+                    'zip' => $addressData['zip'],
+                    'contact_phone' => $addressData['contact_phone'],
+                    'contact_name' => $addressData['contact_name'],
                 ],
                 'remark' => '',
                 'total_amount' => $sku->price,
@@ -223,5 +223,7 @@ class OrderService
         });
 
         dispatch(new CloseOrder($order, config('app.seckill_order_ttl')));
+
+        return $order;
     }
 }
