@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPaid;
+use App\Http\Requests\SeckillRequest;
 use App\Http\Requests\SendReviewRequest;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Requests\OrderRequest;
@@ -10,6 +12,7 @@ use App\Models\UserAddress;
 use App\Models\Order;
 use App\Models\ProductSku;
 use App\Models\CrowdfundingProduct;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use App\Services\OrderService;
 use App\Events\OrderReviewd;
@@ -53,6 +56,15 @@ class OrdersController extends Controller
         }
 
         return $orderService->store($user, $address, $request->input('remark'), $request->input('items'), $coupon);
+    }
+
+    public function seckill(SeckillRequest $request, OrderService $orderService)
+    {
+        $user = $request->user();
+        $address = UserAddress::find($request->input('address_id'));
+        $sku = ProductSku::find($request->input('sku_id'));
+
+        return $orderService->seckill($user, $address, $sku);
     }
 
     public function crowdfunding(CrowdFundingOrderRequest $request, OrderService $orderService)

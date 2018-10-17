@@ -230,7 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-
+    'seckill_order_ttl' => 600,
     'order_ttl' => 1800,
     'ngrok_url' => env('NGROK_URL'),
     'installment_fee_rate' => [
