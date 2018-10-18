@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 use Illuminate\Database\Eloquent\Model;
@@ -43,8 +44,11 @@ class Product extends Model
         if (Str::startsWith($this->attributes['image'], ['http://', 'https://'])) {
             return $this->attributes['image'];
         }
+
         if (env('FILE_STORE') == 'oss') {
-            return "https://".env('OSS_BUCKET').env('OSS_ENDPOINT').'/'.$this->attributes['image'];
+            Storage::disk('oss');
+            return Storage::url($this->attributes['image']);
+//            return "https://".env('OSS_BUCKET').'.'.env('OSS_ENDPOINT').'/'.$this->attributes['image'];
         }
 
         return \Storage::disk('public')->url($this->attributes['image']);

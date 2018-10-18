@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'local'),
-//    'default' => 'oss',
+//    'default' => env('FILESYSTEM_DRIVER', 'local'),
+    'default' => 'oss',
     /*
     |--------------------------------------------------------------------------
     | Default Cloud Filesystem Disk
@@ -68,7 +68,8 @@ return [
             'access_key' => env('OSS_ACCESS_KEY','your key'),
             'bucket'     => env('OSS_BUCKET','your bucket'),
             'endpoint'   => env('OSS_ENDPOINT','your endpoint'),
-            'prefix'     => env('OSS_PREFIX', ''), // optional
+            'prefix'     => env('OSS_PREFIX', ''),
+            'ssl' => 'true',
         ],
 
 

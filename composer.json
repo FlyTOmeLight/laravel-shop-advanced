@@ -12,6 +12,7 @@
         "encore/laravel-admin": "1.6.1",
         "endroid/qr-code": "^3.2",
         "fideloper/proxy": "~3.3",
+        "jacobcyl/ali-oss-storage": "^2.1",
         "jxlwqq/material-ui": "^1.0",
         "laravel/framework": "5.5.*",
         "laravel/horizon": "^1.4",
