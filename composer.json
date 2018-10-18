@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "apollopy/flysystem-aliyun-oss": "^1.2",
         "barryvdh/laravel-debugbar": "^3.2",
         "elasticsearch/elasticsearch": "~6.0",
         "encore/laravel-admin": "1.6.1",

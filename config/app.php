@@ -169,6 +169,8 @@ return [
          */
         //debug bar add by zhou 2018-09-24
         Barryvdh\Debugbar\ServiceProvider::class,
+        //filesystem oss aliyun
+        ApolloPY\Flysystem\AliyunOss\AliyunOssServiceProvider::class,
         /*
          * Application Service Providers...
          */

@@ -7,6 +7,7 @@ use Monolog\Logger;
 use Yansongda\Pay\Pay;
 use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
